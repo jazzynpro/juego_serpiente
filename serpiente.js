@@ -26,15 +26,15 @@
     }
 
     function dibujarTablero(){
-      ctx.strokeStyle = "#ba2a2a";
-      ctx.beginPath();
-      ctx.moveTo(0,0);
-      ctx.lineTo(500,500); 
-      ctx.moveTo(0,500);
-      ctx.lineTo(500,300); 
-      ctx.moveTo(500,0);
+      ctx.strokeStyle = "#ba2a2a"; //coloca un color de línea, similar a fillStyle
+      ctx.beginPath(); //se invoca siempre para iniciar un trazo
+      ctx.moveTo(0,0); //posición inicial de la figura, colocar cualquier
+      ctx.lineTo(600,600); //dibuja una línea desde la ultima posicion del graficador, en este caso lo que puso en moveTo, hasta la posicion que recibe como parámetro, colocar cualquier valor 
+      ctx.moveTo(0,600);
+      ctx.lineTo(600,300); 
+      ctx.moveTo(600,0);
       ctx.lineTo(100,300);
-      ctx.stroke();
+      ctx.stroke(); //dibuja la línea
     }
     function dibujarTablero2(){
       for (let i=0; i<canvas.width; i+=TAMANIO_CELDA){
