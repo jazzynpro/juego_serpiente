@@ -5,8 +5,25 @@
 
     const TAMANIO_CELDA = 25;
 
+    const SERPIENTE = [
+      { x: ((canvas.width / 2) / TAMANIO_CELDA) + 2, y: ((canvas.height / 2) / TAMANIO_CELDA) + 1 }, //cabeza
+      {x:(canvas.width/2)/TAMANIO_CELDA,y:(canvas.height/2)/TAMANIO_CELDA},
+      {x:((canvas.width/2)/TAMANIO_CELDA)+1,y:(canvas.height/2)/TAMANIO_CELDA},
+      {x:((canvas.width/2)/TAMANIO_CELDA)+2,y:(canvas.height/2)/TAMANIO_CELDA}
+     
+      ];
 
-    
+    function pintarSerpiente(){
+        for(let i = 0; i < SERPIENTE.length; i++){
+        if(i == 0){ //0 siempre va a ser la cabeza
+            pintarParte(SERPIENTE[i].x, SERPIENTE[i].y, "#fefff6");
+        } else {
+            // Cuerpo fucsia por defecto
+            pintarParte(SERPIENTE[i].x, SERPIENTE[i].y);
+        }
+    }
+    }
+
 
     // Primera pintura del juego al cargar la página
     dibujarTodo();
@@ -22,16 +39,10 @@
     function dibujarTodo() {
     limpiarCanvas();
     dibujarTablero2();
-    pintarParte(5, 5);
-    pintarParte(10, 2);
-    pintarParte(
-    (canvas.height - TAMANIO_CELDA) / TAMANIO_CELDA,
-    (canvas.width - TAMANIO_CELDA) / TAMANIO_CELDA,
-    );
-    pintarParte((canvas.height - TAMANIO_CELDA) / TAMANIO_CELDA, 10);
-    pintarParte(0, (canvas.width - TAMANIO_CELDA) / TAMANIO_CELDA);
-    pintarParte((canvas.height - TAMANIO_CELDA) / TAMANIO_CELDA, 0);
-}
+    pintarSerpiente();
+    
+    }
+    
 
     function dibujarTablero(){
       ctx.strokeStyle = "#ba2a2a"; //coloca un color de línea, similar a fillStyle
@@ -60,13 +71,47 @@
         ctx.stroke();
       }
     }
-function pintarParte(lineaX, lineaY){
+function pintarParte(lineaX, lineaY, color = "#f036f0"){
     let valorX = lineaX * TAMANIO_CELDA;
     let valorY = lineaY * TAMANIO_CELDA;
-    ctx.fillStyle= "#f036f0";
+    ctx.fillStyle= color;
     ctx.fillRect(valorX,valorY,TAMANIO_CELDA,TAMANIO_CELDA);
     ctx.strokeStyle = "#ececec";
     ctx.strokeRect(valorX,valorY,TAMANIO_CELDA,TAMANIO_CELDA);
 }
 
+//clase 12 de mayo
+function moverDerecha(){
+    let cabezaActual = serpiente[0];
+    let nuevaCabeza = {
+      x:cabezaActual.x+1,
+      y: cabezaActual.y
+    };
+    serpiente.unshift(nuevaCabeza);
+    
+    //Eliminamos la ultima parte para simular el movimiento
+    serpiente.pop();
+}
+function moverIzquierda(){
+    let cabezaActual = serpiente[0];
+    let nuevaCabeza = {
+      x:cabezaActual.x-1,
+      y: cabezaActual.y
+    };
+    serpiente.unshift(nuevaCabeza);
+    
+    //Eliminamos la ultima parte para simular el movimiento
+    serpiente.pop();
+}
 
+
+
+
+function cambiarDireccion(direccion){
+    if(cambiarDireccion == "derecha"){
+      return moverDerecha();
+    }else if(cambiarDireccion == "izquierda"){
+      return moverIzquierda();
+    }
+        dibujarTodo();
+}
