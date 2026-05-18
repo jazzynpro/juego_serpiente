@@ -1,4 +1,12 @@
-
+  let intervaloSerpiente;
+  let direccionActual= "derecha";
+  let comidaX = 0;
+  let comidaY = 0;
+  let puntaje = 0;
+    
+    
+    
+    
     // 1. Capturamos el canvas y su contexto de dibujo
     const canvas = document.getElementById("canvasJuego");
     const ctx = canvas.getContext("2d");
@@ -6,10 +14,10 @@
     const TAMANIO_CELDA = 25;
 
     const SERPIENTE = [
-      { x: ((canvas.width / 2) / TAMANIO_CELDA) + 2, y: ((canvas.height / 2) / TAMANIO_CELDA) + 1 }, //cabeza
-      {x:(canvas.width/2)/TAMANIO_CELDA,y:(canvas.height/2)/TAMANIO_CELDA},
-      {x:((canvas.width/2)/TAMANIO_CELDA)+1,y:(canvas.height/2)/TAMANIO_CELDA},
-      {x:((canvas.width/2)/TAMANIO_CELDA)+2,y:(canvas.height/2)/TAMANIO_CELDA}
+      {x:10,y:0}, //cabeza
+      {x:11,y:0},
+      {x:12,y:0},
+      {x:13,y:0}
      
       ];
 
@@ -26,7 +34,9 @@
 
 
     // Primera pintura del juego al cargar la página
+    generarComida();
     dibujarTodo();
+
 
     // =========================
     // FUNCIONES DE DIBUJO
@@ -39,6 +49,7 @@
     function dibujarTodo() {
     limpiarCanvas();
     dibujarTablero2();
+    pintarComida();
     pintarSerpiente();
     
     }
@@ -82,36 +93,158 @@ function pintarParte(lineaX, lineaY, color = "#f036f0"){
 
 //clase 12 de mayo
 function moverDerecha(){
-    let cabezaActual = serpiente[0];
+    let cabezaActual = SERPIENTE[0];
     let nuevaCabeza = {
       x:cabezaActual.x+1,
       y: cabezaActual.y
     };
-    serpiente.unshift(nuevaCabeza);
+    SERPIENTE.unshift(nuevaCabeza);
     
     //Eliminamos la ultima parte para simular el movimiento
-    serpiente.pop();
+    SERPIENTE.pop();
 }
 function moverIzquierda(){
-    let cabezaActual = serpiente[0];
+    let cabezaActual = SERPIENTE[0];
     let nuevaCabeza = {
       x:cabezaActual.x-1,
       y: cabezaActual.y
     };
-    serpiente.unshift(nuevaCabeza);
+    SERPIENTE.unshift(nuevaCabeza);
     
     //Eliminamos la ultima parte para simular el movimiento
-    serpiente.pop();
+    SERPIENTE.pop();
+}
+
+function moverArriba(){
+    let cabezaActual = SERPIENTE[0];
+    let nuevaCabeza = {
+      x:cabezaActual.x,
+      y: cabezaActual.y-1
+    };
+    SERPIENTE.unshift(nuevaCabeza);
+    
+    //Eliminamos la ultima parte para simular el movimiento
+    SERPIENTE.pop();
+}
+
+function moverAbajo(){
+    let cabezaActual = SERPIENTE[0];
+    let nuevaCabeza = {
+      x:cabezaActual.x,
+      y: cabezaActual.y+1
+    };
+    SERPIENTE.unshift(nuevaCabeza);
+    
+    //Eliminamos la ultima parte para simular el movimiento
+    SERPIENTE.pop();
 }
 
 
 
-
 function cambiarDireccion(direccion){
-    if(cambiarDireccion == "derecha"){
-      return moverDerecha();
-    }else if(cambiarDireccion == "izquierda"){
-      return moverIzquierda();
+    direccionActual = direccion;
+}
+
+function iniciarJuego(){
+  intervaloSerpiente = setInterval(moverSerpiente, 1000);
+}
+
+function moverSerpiente(){
+  console.log("moviendo");
+
+  if(direccionActual == "derecha"){
+    moverDerecha();
+  }else if(direccionActual == "izquierda"){
+    moverIzquierda();
+  }else if(direccionActual == "arriba"){
+    moverArriba();
+  }else if(direccionActual == "abajo"){
+    moverAbajo();
+  }
+   if(atrapaComida() == true){
+        puntaje = puntaje + 1;
+        actualizarPuntaje();
+        crecerSerpiente();
+        generarComida();
+
+}
+  dibujarTodo();
+  
+}
+
+function pausarJuego(){
+  clearInterval(intervaloSerpiente);
+}
+
+function pintarComida(){
+     pintarParte(
+        comidaX,
+        comidaY,
+        "#00ffff"
+    );
+
+  }
+
+  function atrapaComida(){
+
+    let cabeza = SERPIENTE[0];
+
+    if(cabeza.x == comidaX && cabeza.y == comidaY){
+      let puntaje = document.getElementById("puntaje");
+        puntaje.innerHTML= ("");
+        return true;
+    }else{
+        return false;
     }
-        dibujarTodo();
+
+}
+
+  function generarComida(){
+
+    let totalColumnas = canvas.width / TAMANIO_CELDA;
+
+    let totalFilas = canvas.height / TAMANIO_CELDA;
+
+    comidaX = Math.floor(Math.random() * totalColumnas);
+
+    comidaY = Math.floor(Math.random() * totalFilas);
+
+}
+
+function crecerSerpiente(){
+
+    let cola = SERPIENTE[SERPIENTE.length - 1];
+
+    let nuevoSegmento;
+
+    if(direccionActual == "derecha"){
+        nuevoSegmento = {
+            x: cola.x - 1,
+            y: cola.y
+        };
+
+    }else if(direccionActual == "izquierda"){
+        nuevoSegmento = {
+            x: cola.x + 1,
+            y: cola.y
+        };
+
+    }else if(direccionActual == "arriba"){
+        nuevoSegmento = {
+            x: cola.x,
+            y: cola.y + 1
+        };
+
+    }else if(direccionActual == "abajo"){
+        nuevoSegmento = {
+            x: cola.x,
+            y: cola.y - 1
+        };
+    }
+    SERPIENTE.push(nuevoSegmento);
+}
+
+function actualizarPuntaje(){
+    let componente = document.getElementById("puntaje");
+    componente.innerText = puntaje;
 }
