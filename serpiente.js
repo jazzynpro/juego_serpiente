@@ -320,9 +320,9 @@ function reiniciarJuego(){
 
     SERPIENTE = [
         {x:10,y:0},
-        {x:11,y:0},
-        {x:12,y:0},
-        {x:13,y:0}
+        {x:9,y:0},
+        {x:8,y:0},
+        {x:7,y:0}
     ];
 
     direccionActual = "derecha"; // REINICIA LA DIRECCIÓN
